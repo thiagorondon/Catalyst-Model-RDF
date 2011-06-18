@@ -11,11 +11,19 @@ use RDF::Trine::Model;
 
 our $AUTOLOAD;
 
+=head1 ATTRIBUTES
+
+Format can be: OwnIFn, NTriples, NQuads, Turtle, RDFXML, Notation3 or RDFJSON.
+
+=head2
+
+=cut
+
 has format => (
     is => 'rw',
     isa => 'Str',
     lazy => 1,
-    default => 'xml'
+    default => 'rdfxml'
 );
 
 has _class => (
@@ -36,7 +44,8 @@ sub AUTOLOAD {
 sub serializer {
     my $self = shift;
 
-    my $serializer = RDF::Trine::Serializer::RDFXML->new();
+    my $serializer = RDF::Trine::Serializer->new($self->format');
+
     my $output = $serializer->serialize_model_to_string($self->_class);
 
     return $output;
