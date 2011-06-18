@@ -50,3 +50,9 @@ __END__
 
 The same as L<RDF::Trine::Model>.
 
+=head3 serializer
+
+Serializes the $model to RDF/$format, returning the result as a string.
+
+=cut
+

@@ -36,7 +36,6 @@ use_ok('TestApp');
 </rdf:Description>
 </rdf:RDF>
 END
-	
 
     my $output = $model->serializer;
     ok($output, 'serialize model to string');
