@@ -9,7 +9,7 @@ use Catalyst;
 __PACKAGE__->config(
     name        => 'TestApp',
     'Model::RDF' => {
-        format     => 'xml',
+        format     => 'rdfxml',
     },
 );
 

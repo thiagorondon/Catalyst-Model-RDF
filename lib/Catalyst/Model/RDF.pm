@@ -44,7 +44,7 @@ sub AUTOLOAD {
 sub serializer {
     my $self = shift;
 
-    my $serializer = RDF::Trine::Serializer->new($self->format');
+    my $serializer = RDF::Trine::Serializer->new($self->format);
 
     my $output = $serializer->serialize_model_to_string($self->_class);
 
