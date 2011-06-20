@@ -9,8 +9,6 @@ use RDF::Trine::Model;
 # ABSTRACT: RDF model class for Catalyst based on RDF::Trine::Model.
 # VERSION
 
-our $AUTOLOAD;
-
 =head1 ATTRIBUTES
 
 Format can be: OwnIFn, NTriples, NQuads, Turtle, RDFXML, Notation3 or RDFJSON.
@@ -28,18 +26,10 @@ has format => (
 
 has _class => (
     is => 'ro',
-    isa => 'Object',
-    init_arg => undef,
-    lazy => 1,
-    default => sub { RDF::Trine::Model->temporary_model }
+    isa => 'RDF::Trine::Model',
+    default => sub { RDF::Trine::Model->temporary_model },
+    handles => qr/.*/
 );
-
-sub AUTOLOAD {
-    my $self = shift;
-    return if $AUTOLOAD =~ /::DESTROY$/;
-    (my $command = $AUTOLOAD) =~ s/^.*:://;
-    return $self->_class->$command(@_);
-}
 
 sub serializer {
     my $self = shift;
