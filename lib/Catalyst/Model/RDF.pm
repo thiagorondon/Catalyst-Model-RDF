@@ -17,31 +17,41 @@ use RDF::Trine::Model;
 
     # in myapp.conf
     <Model::RDF>
+        format turtle
+
         # see documentation for RDF::Trine::Store, this structure
         # gets passed verbatim to `new_with_config'.
         <store>
-        storetype DBI
-        name      myapp
-        dsn       dbi:Pg:dbname=rdf
-        user      rdfuser
-        password  suparsekrit
+            storetype DBI
+            name      myapp
+            dsn       dbi:Pg:dbname=rdf
+            user      rdfuser
+            password  suparsekrit
         </store>
     </Model::RDF>
 
-=head1 ATTRIBUTES
+=head1 DESCRIPTION
 
-Format can be: OwnIFn, NTriples, NQuads, Turtle, RDFXML, Notation3 or RDFJSON.
+L<Catalyst::Model::RDF> is a thin proxy around L<RDF::Trine::Model>.
+It can be initialized using the L<Catalyst> configuration file or
+method. The following parameters are currently recognized:
 
-=head2
+=over 4
+
+=item format
+
+Any name found in L<RDF::Trine::Serializer/serializer_names> (as of
+this writing, this consists of C<ntriples>, C<nquads>, C<rdfxml>,
+C<rdfjson>, C<turtle> and C<ntriples-canonical>).
+
+=item store
+
+A hash reference (or configuration file equivalent) that will be passed
+directly to L<RDF::Trine::Store/new_with_config>.
+
+=back
 
 =cut
-
-# don't need this at the moment
-# sub BUILD {
-#     my ($self, $args) = @_;
-#     require Data::Dumper;
-#     warn Data::Dumper::Dumper($args);
-# }
 
 subtype 'SerializerFormat', as 'Str',
     where { grep { lc $_ } RDF::Trine::Serializer->serializer_names };
@@ -76,13 +86,13 @@ has _class => (
 );
 
 sub serializer {
-    my $self = shift;
+    my ($self, $format) = @_;
 
-    my $serializer = RDF::Trine::Serializer->new($self->format);
+    $format ||= $self->format;
 
-    my $output = $serializer->serialize_model_to_string($self->_class);
+    my $serializer = RDF::Trine::Serializer->new($format);
 
-    return $output;
+    $serializer->serialize_model_to_string($self->_class);
 }
 
 1;
@@ -91,11 +101,19 @@ __END__
 
 =head1 METHODS
 
-The same as L<RDF::Trine::Model>.
+In addition to proxying L<RDF::Trine::Model>, this module implements
+the following accessors:
+
+=head2 format
+
+Get or set the default format (see L<RDF::Trine::Serializer>).
+
+=head2 store
+
+Retrieve the L<RDF::Trine::Store> object underpinning the model.
 
 =head2 serializer
 
-Serializes the $model to RDF/$format, returning the result as a string.
+Serialize the C<$model> to RDF/C<$format>, returning the result as a string.
 
 =cut
-
