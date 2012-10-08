@@ -10,6 +10,14 @@ __PACKAGE__->config(
     name        => 'TestApp',
     'Model::RDF' => {
         format     => 'rdfxml',
+        store      => {
+            storetype => 'DBI',
+            name      => 'test',
+            dsn       => 'dbi:SQLite:dbname=test.sqlite',
+            # to shut up the warnings
+            username  => '',
+            password  => '',
+        },
     },
 );
 

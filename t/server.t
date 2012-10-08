@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 5;
 use lib qw( t/lib );
 
 # Make sure the Catalyst app loads ok...
@@ -13,6 +13,12 @@ use_ok('TestApp');
     my $model = TestApp->model('rdf');
     isa_ok( $model, 'Catalyst::Model::RDF' );
     can_ok( $model, 'serializer' );
+    isa_ok($model->store, 'RDF::Trine::Store::DBI');
+
+    #warn Data::Dumper::Dumper($model);
+
+    # add_hashref already does begin/end_bulk_ops so why is it not
+    # persisting?
 
     $model->add_hashref(
         {
