@@ -10,6 +10,10 @@ __PACKAGE__->config(
     name        => 'TestApp',
     'Model::RDF' => {
         format     => 'rdfxml',
+        namespaces => {
+            rdf => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+            dct => 'http://purl.org/dc/terms/',
+        },
         store      => {
             storetype => 'DBI',
             name      => 'test',

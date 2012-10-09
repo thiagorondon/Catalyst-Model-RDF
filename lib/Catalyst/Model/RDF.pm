@@ -19,6 +19,11 @@ use RDF::Trine::Model;
     <Model::RDF>
         format turtle
 
+        <namespaces>
+            rdf  http://www.w3.org/1999/02/22-rdf-syntax-ns\#
+            dct  http://purl.org/dc/terms/
+        </namespaces>
+
         # see documentation for RDF::Trine::Store, this structure
         # gets passed verbatim to `new_with_config'.
         <store>
@@ -38,18 +43,27 @@ method. The following parameters are currently recognized:
 
 =over 4
 
+=item namespaces
+
+=cut
+
+class_type NamespaceMap => { class => 'RDF::Trine::NamespaceMap' };
+coerce 'NamespaceMap', from 'HashRef',
+    via { RDF::Trine::NamespaceMap->new(shift) };
+
+has ns => (
+    is       => 'ro',
+    isa      => 'NamespaceMap',
+    coerce   => 1,
+    init_arg => 'namespaces',
+    default  => sub { RDF::Trine::NamespaceMap->new },
+);
+
 =item format
 
 Any name found in L<RDF::Trine::Serializer/serializer_names> (as of
 this writing, this consists of C<ntriples>, C<nquads>, C<rdfxml>,
 C<rdfjson>, C<turtle> and C<ntriples-canonical>).
-
-=item store
-
-A hash reference (or configuration file equivalent) that will be passed
-directly to L<RDF::Trine::Store/new_with_config>.
-
-=back
 
 =cut
 
@@ -62,6 +76,15 @@ has format => (
     lazy    => 1,
     default => 'rdfxml',
 );
+
+=item store
+
+A hash reference (or configuration file equivalent) that will be passed
+directly to L<RDF::Trine::Store/new_with_config>.
+
+=back
+
+=cut
 
 class_type TrineStore => { class => 'RDF::Trine::Store' };
 coerce 'TrineStore', from 'HashRef',

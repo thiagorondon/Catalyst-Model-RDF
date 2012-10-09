@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use lib qw( t/lib );
 
 # Make sure the Catalyst app loads ok...
@@ -14,6 +14,8 @@ use_ok('TestApp');
     isa_ok( $model, 'Catalyst::Model::RDF' );
     can_ok( $model, 'serializer' );
     isa_ok($model->store, 'RDF::Trine::Store::DBI');
+    isa_ok($model->ns, 'RDF::Trine::NamespaceMap');
+    ok($model->ns->dct, 'Correctly imported namespace mapping from config');
 
     #warn Data::Dumper::Dumper($model);
 
